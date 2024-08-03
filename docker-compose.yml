@@ -8,6 +8,8 @@ services:
     container_name: backend
     ports:
       - "8000:8000"
+    environment:
+      - DB_HOST=db
     restart: unless-stopped
     networks:
       - dev_net
@@ -16,7 +18,11 @@ services:
     image: postgres:latest
     container_name: db
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
@@ -31,6 +37,18 @@ services:
       - "8189:8189"
     depends_on:
       - backend
+    networks:
+      - dev_net
+
+  initdb:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: ["python", "/app/init_db.py"]
+    environment:
+      - DB_HOST=db
+    depends_on:
+      - db
     networks:
       - dev_net
 
