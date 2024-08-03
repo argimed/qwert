@@ -14,7 +14,7 @@ class UserView(BaseModel):
     email: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserReturnView(BaseModel):
@@ -23,7 +23,7 @@ class UserReturnView(BaseModel):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserCreate(BaseModel):

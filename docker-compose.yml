@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - dev_net
+
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - dev_net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "8189:8189"
+    depends_on:
+      - backend
+    networks:
+      - dev_net
+
+networks:
+  dev_net:
+
+volumes:
+  pgdata:
